@@ -1,0 +1,140 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# DEMO SCRIPT — Library GraphQL API
+# Paste these into Apollo Sandbox at http://localhost:4000
+# Run them in order for the cleanest demo story.
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+# 1. GET ALL BOOKS — without any Person data
+#    Demonstrates GraphQL's selective fetching: we ask only for book fields,
+#    the checkedOutBy resolver is never called, no person data is loaded.
+query GetAllBooks {
+  getAllBooks {
+    id
+    title
+    author
+    isCheckedOut
+  }
+}
+
+
+# 2. GET A SINGLE BOOK (available) — no person data returned
+query GetAvailableBook {
+  getBookForId(bookId: "book-2") {
+    id
+    title
+    author
+    isCheckedOut
+    checkedOutBy {
+      firstName
+      lastName
+      emailAddress
+      phoneNumber
+    }
+  }
+}
+
+
+# 3. GET A SINGLE BOOK (checked out) — includes full person details
+#    book-1 is pre-seeded as checked out by Alice Johnson
+query GetCheckedOutBook {
+  getBookForId(bookId: "book-1") {
+    id
+    title
+    author
+    isCheckedOut
+    checkedOutBy {
+      firstName
+      lastName
+      emailAddress
+      phoneNumber
+    }
+  }
+}
+
+
+# 4. CHECK OUT A BOOK
+#    Check out "To Kill a Mockingbird" (book-2) to Carol White (person-3)
+mutation CheckOutBook {
+  checkOutBook(input: { bookId: "book-2", personId: "person-3" }) {
+    id
+    title
+    isCheckedOut
+    checkedOutBy {
+      firstName
+      lastName
+      emailAddress
+    }
+  }
+}
+
+
+# 5. RETURN A BOOK
+#    Return "The Great Gatsby" (book-1)
+mutation ReturnBook {
+  returnBook(bookId: "book-1") {
+    id
+    title
+    isCheckedOut
+    checkedOutBy {
+      firstName
+    }
+  }
+}
+
+
+# ─── ERROR CASES (good to show during demo) ───────────────────────────────────
+
+# Try to check out a book that's already checked out → BOOK_ALREADY_CHECKED_OUT
+mutation CheckOutAlreadyCheckedOut {
+  checkOutBook(input: { bookId: "book-1", personId: "person-2" }) {
+    id
+    title
+  }
+}
+
+# Try to return a book that's already available → BOOK_NOT_CHECKED_OUT
+mutation ReturnAvailableBook {
+  returnBook(bookId: "book-4") {
+    id
+    title
+  }
+}
+
+# Unknown book id → BOOK_NOT_FOUND
+query GetUnknownBook {
+  getBookForId(bookId: "book-999") {
+    id
+    title
+  }
+}
+
+
+# ─── EXTRA: Create data live during demo ──────────────────────────────────────
+# (These mutations are not required by the spec — added for demo flexibility)
+
+mutation CreatePerson {
+  createPerson(input: {
+    firstName: "Diana"
+    lastName: "Prince"
+    emailAddress: "diana.prince@example.com"
+    phoneNumber: "555-0199"
+  }) {
+    id
+    firstName
+    lastName
+    emailAddress
+  }
+}
+
+mutation CreateBook {
+  createBook(input: {
+    title: "The Hobbit"
+    author: "J.R.R. Tolkien"
+  }) {
+    id
+    title
+    author
+    isCheckedOut
+  }
+}

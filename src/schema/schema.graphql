@@ -1,0 +1,52 @@
+type Book {
+  id: ID!
+  title: String!
+  author: String!
+  isCheckedOut: Boolean!
+  checkedOutBy: Person
+}
+
+type Person {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  emailAddress: String!
+  phoneNumber: String
+}
+
+input CheckOutBookInput {
+  bookId: ID!
+  personId: ID!
+}
+
+input CreateBookInput {
+  title: String!
+  author: String!
+}
+
+input CreatePersonInput {
+  firstName: String!
+  lastName: String!
+  emailAddress: String!
+  phoneNumber: String
+}
+
+type Query {
+  getAllBooks: [Book!]!
+  getBookForId(bookId: ID!): Book!
+}
+
+type Mutation {
+  checkOutBook(input: CheckOutBookInput!): Book!
+  returnBook(bookId: ID!): Book!
+
+  """
+  Not required by spec — added to enable live demo data creation
+  """
+  createBook(input: CreateBookInput!): Book!
+
+  """
+  Not required by spec — added to enable live demo data creation
+  """
+  createPerson(input: CreatePersonInput!): Person!
+}
