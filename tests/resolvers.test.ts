@@ -66,7 +66,7 @@ describe('Mutation: checkOutBook', () => {
   it('throws PersonNotFoundError for an unknown person', () => {
     const ctx = createContext();
     expect(() =>
-      callResolver(Mutation.checkOutBook, { input: { bookId: 'book-2', personId: 'does-not-exist' } }, ctx),
+      callResolver(Mutation.checkOutBook, { input: { bookId: 'book-4', personId: 'does-not-exist' } }, ctx),
     ).toThrow(PersonNotFoundError);
   });
 });
@@ -82,7 +82,7 @@ describe('Mutation: returnBook', () => {
   it('throws BookNotCheckedOutError when book is already available', () => {
     const ctx = createContext();
     expect(() =>
-      callResolver(Mutation.returnBook, { bookId: 'book-2' }, ctx),
+      callResolver(Mutation.returnBook, { bookId: 'book-5' }, ctx),
     ).toThrow(BookNotCheckedOutError);
   });
 });

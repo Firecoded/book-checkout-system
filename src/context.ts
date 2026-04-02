@@ -18,9 +18,10 @@ export interface Context {
   };
 }
 
+const books = new BookDataSource();
+const persons = new PersonDataSource();
+
 export function createContext(): Context {
-  const books = new BookDataSource();
-  const persons = new PersonDataSource();
   return {
     dataSources: { books, persons },
     loaders: {
